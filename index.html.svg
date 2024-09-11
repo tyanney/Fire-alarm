@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600">
+  <!-- Building outline -->
+  <rect x="50" y="50" width="300" height="500" fill="none" stroke="black" stroke-width="2"/>
+  
+  <!-- Floors -->
+  <line x1="50" y1="150" x2="350" y2="150" stroke="black" stroke-width="1"/>
+  <line x1="50" y1="250" x2="350" y2="250" stroke="black" stroke-width="1"/>
+  <line x1="50" y1="350" x2="350" y2="350" stroke="black" stroke-width="1"/>
+  <line x1="50" y1="450" x2="350" y2="450" stroke="black" stroke-width="1"/>
+  
+  <!-- Floor numbers -->
+  <text x="30" y="125" font-size="14">5</text>
+  <text x="30" y="225" font-size="14">4</text>
+  <text x="30" y="325" font-size="14">3</text>
+  <text x="30" y="425" font-size="14">2</text>
+  <text x="30" y="525" font-size="14">1</text>
+  
+  <!-- Elevator shaft -->
+  <rect x="280" y="50" width="50" height="500" fill="lightgray" stroke="black" stroke-width="1"/>
+  <text x="285" y="40" font-size="10">Elevator</text>
+  
+  <!-- Machine room -->
+  <rect x="200" y="470" width="80" height="80" fill="lightgray" stroke="black" stroke-width="1"/>
+  <text x="205" y="495" font-size="10">Machine</text>
+  <text x="215" y="510" font-size="10">Room</text>
+  
+  <!-- Smoke detectors with labels -->
+  <circle cx="200" cy="100" r="15" fill="lightgray" stroke="black" stroke-width="2"/>
+  <text x="195" y="105" font-size="12" fill="black">5</text>
+  <circle cx="200" cy="200" r="15" fill="lightgray" stroke="black" stroke-width="2"/>
+  <text x="195" y="205" font-size="12" fill="black">4</text>
+  <circle cx="200" cy="300" r="15" fill="lightgray" stroke="black" stroke-width="2"/>
+  <text x="195" y="305" font-size="12" fill="black">3</text>
+  <circle cx="200" cy="400" r="15" fill="lightgray" stroke="black" stroke-width="2"/>
+  <text x="195" y="405" font-size="12" fill="black">2</text>
+  <circle cx="150" cy="500" r="15" fill="lightgray" stroke="black" stroke-width="2"/>
+  <text x="145" y="505" font-size="12" fill="black">1</text>
+  <circle cx="305" cy="60" r="15" fill="lightgray" stroke="black" stroke-width="2"/>
+  <text x="295" y="65" font-size="12" fill="black">ES</text>
+  <circle cx="240" cy="510" r="15" fill="lightgray" stroke="black" stroke-width="2"/>
+  <text x="230" y="515" font-size="12" fill="black">MR</text>
+  
+  <!-- Modules -->
+  <rect x="380" y="100" width="70" height="40" fill="lightblue" stroke="black" stroke-width="2"/>
+  <text x="390" y="125" font-size="10">Primary</text>
+  
+  <rect x="380" y="200" width="70" height="40" fill="lightgreen" stroke="black" stroke-width="2"/>
+  <text x="385" y="225" font-size="10">Secondary</text>
+  
+  <rect x="380" y="300" width="70" height="40" fill="lightyellow" stroke="black" stroke-width="2"/>
+  <text x="385" y="325" font-size="10">Alternative</text>
+  
+  <rect x="380" y="400" width="70" height="40" fill="lightpink" stroke="black" stroke-width="2"/>
+  <text x="390" y="425" font-size="10">Fire Hat</text>
+  
+  <!-- Connections (completely redesigned to avoid overlaps) -->
+  <path d="M215 100 H350 V110 H380" stroke="red" stroke-width="1" fill="none"/>
+  <path d="M215 200 H340 V115 H380" stroke="red" stroke-width="1" fill="none"/>
+  <path d="M215 300 H330 V120 H380" stroke="red" stroke-width="1" fill="none"/>
+  <path d="M215 400 H320 V125 H380" stroke="red" stroke-width="1" fill="none"/>
+  <path d="M165 500 H310 V220 H380" stroke="blue" stroke-width="1" fill="none"/>
+  <path d="M320 60 V70 H360 V105 H380" stroke="red" stroke-width="1" fill="none"/>
+  <path d="M320 60 V80 H370 V420 H380" stroke="purple" stroke-width="1" fill="none"/>
+  <path d="M255 510 H300 V320 H380" stroke="green" stroke-width="1" fill="none"/>
+  <path d="M255 510 H290 V425 H380" stroke="purple" stroke-width="1" fill="none"/>
+</svg>
