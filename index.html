@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Smoke Detector System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            position: relative;
+            width: 500px;
+            height: 600px;
+        }
+        .building {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 300px;
+            height: 500px;
+            border: 2px solid black;
+        }
+        .floor {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: black;
+        }
+        .floor-number {
+            position: absolute;
+            left: -20px;
+            font-size: 14px;
+        }
+        .detector {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: lightgray;
+            border: 2px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .detector:hover {
+            background-color: #d0d0d0;
+        }
+        .detector.active {
+            background-color: yellow;
+        }
+        .module {
+            position: absolute;
+            width: 70px;
+            height: 40px;
+            border: 2px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+        }
+        .connection {
+            position: absolute;
+            background-color: transparent;
+            transition: background-color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="building"></div>
+        <div class="floor" style="top: 150px;"></div>
+        <div class="floor" style="top: 250px;"></div>
+        <div class="floor" style="top: 350px;"></div>
+        <div class="floor" style="top: 450px;"></div>
+        
+        <div class="floor-number" style="top: 125px;">5</div>
+        <div class="floor-number" style="top: 225px;">4</div>
+        <div class="floor-number" style="top: 325px;">3</div>
+        <div class="floor-number" style="top: 425px;">2</div>
+        <div class="floor-number" style="top: 525px;">1</div>
+        
+        <div class="detector" style="left: 200px; top: 100px;" data-floor="5">5</div>
+        <div class="detector" style="left: 200px; top: 200px;" data-floor="4">4</div>
+        <div class="detector" style="left: 200px; top: 300px;" data-floor="3">3</div>
+        <div class="detector" style="left: 200px; top: 400px;" data-floor="2">2</div>
+        <div class="detector" style="left: 150px; top: 500px;" data-floor="1">1</div>
+        <div class="detector" style="left: 305px; top: 60px;" data-floor="ES">ES</div>
+        <div class="detector" style="left: 240px; top: 510px;" data-floor="MR">MR</div>
+        
+        <div class="module" style="left: 380px; top: 100px; background-color: lightblue;" data-module="Primary">Primary</div>
+        <div class="module" style="left: 380px; top: 200px; background-color: lightgreen;" data-module="Secondary">Secondary</div>
+        <div class="module" style="left: 380px; top: 300px; background-color: lightyellow;" data-module="Alternative">Alternative</div>
+        <div class="module" style="left: 380px; top: 400px; background-color: lightpink;" data-module="FireHat">Fire Hat</div>
+        
+        <div class="connection" id="conn-5" style="left: 230px; top: 105px; width: 150px; height: 10px;"></div>
+        <div class="connection" id="conn-4" style="left: 230px; top: 205px; width: 140px; height: 10px;"></div>
+        <div class="connection" id="conn-3" style="left: 230px; top: 305px; width: 130px; height: 10px;"></div>
+        <div class="connection" id="conn-2" style="left: 230px; top: 405px; width: 120px; height: 10px;"></div>
+        <div class="connection" id="conn-1" style="left: 180px; top: 505px; width: 130px; height: 10px;"></div>
+        <div class="connection" id="conn-ES-1" style="left: 335px; top: 75px; width: 25px; height: 10px;"></div>
+        <div class="connection" id="conn-ES-2" style="left: 355px; top: 75px; width: 5px; height: 335px;"></div>
+        <div class="connection" id="conn-MR-1" style="left: 270px; top: 515px; width: 30px; height: 10px;"></div>
+        <div class="connection" id="conn-MR-2" style="left: 295px; top: 325px; width: 85px; height: 10px;"></div>
+    </div>
+
+    <script>
+        const detectors = document.querySelectorAll('.detector');
+        const modules = document.querySelectorAll('.module');
+        const connections = document.querySelectorAll('.connection');
+
+        const connectionMap = {
+            '5': ['Primary', 'conn-5'],
+            '4': ['Primary', 'conn-4'],
+            '3': ['Primary', 'conn-3'],
+            '2': ['Primary', 'conn-2'],
+            '1': ['Secondary', 'conn-1'],
+            'ES': ['Primary', 'conn-ES-1', 'conn-ES-2'],
+            'MR': ['Alternative', 'conn-MR-1', 'conn-MR-2']
+        };
+
+        detectors.forEach(detector => {
+            detector.addEventListener('click', () => {
+                // Reset all detectors, modules, and connections
+                detectors.forEach(d => d.classList.remove('active'));
+                modules.forEach(m => m.style.boxShadow = 'none');
+                connections.forEach(c => c.style.backgroundColor = 'transparent');
+
+                // Activate clicked detector
+                detector.classList.add('active');
+
+                // Highlight corresponding module and connection
+                const floor = detector.dataset.floor;
+                const moduleNames = connectionMap[floor];
+                moduleNames.forEach(moduleName => {
+                    if (moduleName === 'Primary' || moduleName === 'Secondary' || moduleName === 'Alternative' || moduleName === 'FireHat') {
+                        const module = document.querySelector(`.module[data-module="${moduleName}"]`);
+                        module.style.boxShadow = '0 0 10px 5px yellow';
+                    } else {
+                        const connection = document.getElementById(moduleName);
+                        connection.style.backgroundColor = 'red';
+                    }
+                });
+
+                // Special case for ES and MR detectors
+                if (floor === 'ES' || floor === 'MR') {
+                    const fireHatModule = document.querySelector('.module[data-module="FireHat"]');
+                    fireHatModule.style.boxShadow = '0 0 10px 5px yellow';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
