@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Smoke Detector System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            position: relative;
+            width: 500px;
+            height: 600px;
+        }
+        .building {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 300px;
+            height: 500px;
+            border: 2px solid black;
+        }
+        .floor {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: black;
+        }
+        .floor-number {
+            position: absolute;
+            left: -20px;
+            font-size: 14px;
+        }
+        .detector {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: lightgray;
+            border: 2px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .detector:hover {
+            background-color: #d0d0d0;
+        }
+        .detector.active {
+            background-color: yellow;
+        }
+        .module {
+            position: absolute;
+            width: 70px;
+            height: 40px;
+            border: 2px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+        }
+        .connection {
+            position: absolute;
+            background-color: transparent;
+            transition: background-color 0.3s;
+        }
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg></svg>
+        <div class="building"></div>
+        <div class="floor" style="top: 150px;"></div>
+        <div class="floor" style="top: 250px;"></div>
+        <div class="floor" style="top: 350px;"></div>
+        <div class="floor" style="top: 450px;"></div>
+        
+        <div class="floor-number" style="top: 125px;">5</div>
+        <div class="floor-number" style="top: 225px;">4</div>
+        <div class="floor-number" style="top: 325px;">3</div>
+        <div class="floor-number" style="top: 425px;">2</div>
+        <div class="floor-number" style="top: 525px;">1</div>
+        
+        <div class="detector" style="left: 200px; top: 100px;" data-floor="5">5</div>
+        <div class="detector" style="left: 200px; top: 200px;" data-floor="4">4</div>
+        <div class="detector" style="left: 200px; top: 300px;" data-floor="3">3</div>
+        <div class="detector" style="left: 200px; top: 400px;" data-floor="2">2</div>
+        <div class="detector" style="left: 150px; top: 500px;" data-floor="1">1</div>
+        <div class="detector" style="left: 305px; top: 60px;" data-floor="ES">ES</div>
+        <div class="detector" style="left: 240px; top: 510px;" data-floor="MR">MR</div>
+        
+        <div class="module" style="left: 380px; top: 100px; background-color: lightblue;" data-module="Primary">Primary</div>
+  <!--      <div class="module" style="left: 380px; top: 200px; background-color: lightgreen;" data-module="Secondary">Secondary</div> -->
+        <div class="module" style="left: 380px; top: 300px; background-color: lightyellow;" data-module="Alternative">Alternative</div>
+        <div class="module" style="left: 380px; top: 400px; background-color: lightpink;" data-module="FireHat">Fire Hat</div>
+    </div>
+
+    <script>
+        const detectors = document.querySelectorAll('.detector');
+        const modules = document.querySelectorAll('.module');
+        const svg = document.querySelector('svg');
+
+        const connectionMap = {
+            '5': ['Primary'],
+            '4': ['Primary'],
+            '3': ['Primary'],
+            '2': ['Primary'],
+            '1': ['Alternative'],
+            'ES': ['Primary', 'FireHat'],
+            'MR': ['Alternative', 'FireHat']
+        };
+
+        function createPath(x1, y1, x2, y2) {
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const midX = (x1 + x2) / 2;
+            path.setAttribute('d', `M${x1},${y1} Q${midX},${y1} ${midX},${(y1+y2)/2} T${x2},${y2}`);
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', 'red');
+            path.setAttribute('stroke-width', '2');
+            return path;
+        }
+
+        detectors.forEach(detector => {
+            detector.addEventListener('click', () => {
+                // Reset all detectors, modules, and remove existing paths
+                detectors.forEach(d => d.classList.remove('active'));
+                modules.forEach(m => m.style.boxShadow = 'none');
+                svg.innerHTML = '';
+
+                // Activate clicked detector
+                detector.classList.add('active');
+
+                // Highlight corresponding module(s) and draw connection(s)
+                const floor = detector.dataset.floor;
+                const moduleNames = connectionMap[floor];
+                moduleNames.forEach(moduleName => {
+                    const module = document.querySelector(`.module[data-module="${moduleName}"]`);
+                    module.style.boxShadow = '0 0 10px 5px yellow';
+
+                    // Calculate positions for path
+                    const detectorRect = detector.getBoundingClientRect();
+                    const moduleRect = module.getBoundingClientRect();
+                    const containerRect = document.querySelector('.container').getBoundingClientRect();
+
+                    const x1 = detectorRect.left + detectorRect.width / 2 - containerRect.left;
+                    const y1 = detectorRect.top + detectorRect.height / 2 - containerRect.top;
+                    const x2 = moduleRect.left - containerRect.left;
+                    const y2 = moduleRect.top + moduleRect.height / 2 - containerRect.top;
+
+                    // Create and append path
+                    const path = createPath(x1, y1, x2, y2);
+                    svg.appendChild(path);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
